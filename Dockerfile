@@ -1,4 +1,4 @@
-#syntax=docker/dockerfile:experimental
+#syntax=docker/dockerfile:1.2
 
 # ------ build env ------
 #
@@ -18,18 +18,25 @@ ENV SECRET_KEY_BASE="$SECRET_KEY"
 
 WORKDIR $RAILS_ROOT
 
+RUN rm -f /etc/apt/apt.conf.d/docker-clean && \
+  echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
+
 # install packages
-RUN --mount=type=cache,target=/var/cache/apt apt update -qq && apt install -y $BUILD_PACKAGES $DEV_PACKAGES $RUBY_PACKAGES && \
-    gem install bundler:$BUNDLER_VERSION
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt --mount=type=cache,sharing=locked,target=/var/lib/apt \
+  apt update -qq && \
+  apt-get install -y --no-install-recommends $BUILD_PACKAGES $DEV_PACKAGES $RUBY_PACKAGES && \
+  gem install bundler:$BUNDLER_VERSION
 
 # Install NodeJS
-RUN --mount=type=cache,target=/var/cache/apt curl -sL https://deb.nodesource.com/setup_14.x | bash - &&\
-    apt update -qq && apt install -y nodejs
+RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
+  curl -sL https://deb.nodesource.com/setup_14.x | bash - && \
+  apt update -qq && apt install -y nodejs
 
 # Install Yarn
-RUN --mount=type=cache,target=/var/cache/apt curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - &&\
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list &&\
-    apt update -qq && apt install -y yarn
+RUN --mount=type=cache,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
+  curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
+  echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list && \
+  apt update -qq && apt install -y yarn
 
 
 # ------ Application code ------
@@ -54,15 +61,16 @@ ENV RAILS_SERVE_STATIC_FILES=1
 ENV GEOLITE_CITY_PATH="${RAILS_ROOT}/db/GeoLite2-City.mmdb"
 
 # install packages
-RUN --mount=type=cache,target=/var/cache/apt mkdir -p /usr/share/man/man1 && mkdir -p /usr/share/man/man7 && \
-    apt-get update -qq && apt-get install -y $PACKAGES $RUBY_PACKAGES && \
-    gem install bundler:${BUNDLER_VERSION}
+RUN --mount=type=cache,sharing=locked,target=/var/cache/apt --mount=type=cache,target=/var/lib/apt \
+  apt-get update -qq && \
+  apt-get install --no-install-recommends -y $PACKAGES $RUBY_PACKAGES && \
+  gem install bundler:${BUNDLER_VERSION}
 
 ARG APP_UID=864
 ARG APP_GID=864
 
 RUN addgroup --system --gid $APP_GID app && \
-    adduser --system --uid $APP_UID --ingroup app app
+  adduser --system --uid $APP_UID --ingroup app app
 
 WORKDIR $RAILS_ROOT
 RUN chown app:app $RAILS_ROOT
