@@ -47,3 +47,8 @@ jobs:
 
     - name: Image digest
       run: echo ${{ steps.docker_build.outputs.digest }}
+   
+    - name: Docker image ls
+      run: docker image ls
+    - name: Docker inspect
+      run: docker image inspect vterdunov/github-action
