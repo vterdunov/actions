@@ -41,7 +41,7 @@ jobs:
       id: docker_build
       with:
         push: false
-        tags: vterdunov/github-action
+        tags: vterdunov/github-action:latest
         cache-from: type=local,src=/tmp/.buildx-cache
         cache-to: type=local,dest=/tmp/.buildx-cache
 
