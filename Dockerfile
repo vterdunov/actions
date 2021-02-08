@@ -79,4 +79,4 @@ USER app
 
 COPY --from=build-env --chown=app /usr/local/bundle /usr/local/bundle
 
-EXPOSE 3000
+EXPOSE 3001
