@@ -1,0 +1,21 @@
+name: Deploy
+
+on:
+  workflow_run:
+    workflows:
+      - Build
+    branches:
+      - main
+    types:
+      - completed
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Deploy
+        run: echo 'Deploy!'
