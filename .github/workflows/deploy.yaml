@@ -20,7 +20,7 @@ on:
         required: false
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-20.04
     timeout-minutes: 10
     steps:
@@ -29,3 +29,9 @@ jobs:
 
       - name: Deploy
         run: echo 'Deploy!'
+
+      - name: Foo
+        run: echo "Hello ${{ github.event.inputs.foo }}"
+
+      - name: Bar
+        run: echo "Hello ${{ github.event.inputs.bar }}"
