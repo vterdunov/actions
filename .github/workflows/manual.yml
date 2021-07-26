@@ -15,7 +15,7 @@ on:
 
 jobs:
   greet:
-    runs-on: self-hosted
+    runs-on: ubuntu-20.04
     steps:
     - name: Foo
       run: echo "Hello ${{ github.event.inputs.foo }}"
