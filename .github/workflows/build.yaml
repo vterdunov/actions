@@ -15,8 +15,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
+      - name: Generate timestamp for image tag
+        id: build-timestamp
+        shell: bash
+        run: |
+          TIMESTAMP=$(date --utc +%F.%H%M%S)
+          echo '::set-output name=TIMESTAMP::${TIMESTAMP}'
+        
       - name: Build
         run: |
           echo 'Build!'
-          echo "::notice file=app.js,line=1,col=5,endColumn=7::Missing semicolon"
+          echo '::warning:: this is a warning'
+          echo "::notice:: Test!"
+          echo "::notice:: Test!"
+          echo "${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
 
