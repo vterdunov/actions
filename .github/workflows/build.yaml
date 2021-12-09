@@ -20,7 +20,7 @@ jobs:
         shell: bash
         run: |
           TIMESTAMP=$(date --utc +%F.%H%M%S)
-          echo '::set-output name=TIMESTAMP::${TIMESTAMP}'
+          echo "::set-output name=TIMESTAMP::${TIMESTAMP}"
         
       - name: Build
         run: |
