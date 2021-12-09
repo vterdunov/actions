@@ -25,8 +25,5 @@ jobs:
       - name: Build
         run: |
           echo 'Build!'
-          echo '::warning:: this is a warning'
-          echo "::notice:: Test!"
-          echo "::notice:: Test!"
-          echo "${{ steps.random-color-generator.outputs.SELECTED_COLOR }}"
+          echo "::notice:: ${{ steps.build-timestamp.outputs.SELECTED_COLOR }}"
 
