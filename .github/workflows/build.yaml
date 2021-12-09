@@ -25,5 +25,5 @@ jobs:
       - name: Build
         run: |
           echo 'Build!'
-          echo "::notice:: ${{ steps.build-timestamp.outputs.SELECTED_COLOR }}"
+          echo "::notice:: ${{ steps.build-timestamp.outputs.TIMESTAMP }}"
 
