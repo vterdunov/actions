@@ -12,6 +12,15 @@ on:
       bar:
         description: 'This is an optional bar'
         required: false
+      bumpType:
+        description: 'Bump type'
+        required: true
+        default: 'patch'
+        type: choice
+        options:
+        - major
+        - minor
+        - patch 
 
 jobs:
   greet:
@@ -21,6 +30,9 @@ jobs:
       run: echo "Hello ${{ github.event.inputs.foo }}"
     - name: Bar
       run: echo "Hello ${{ github.event.inputs.bar }}"
+
+    - name: Bumper
+      run: echo "${{ inputs.bumpType }}"
 
     - name: Print input
       run: |
