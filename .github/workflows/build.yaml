@@ -4,8 +4,8 @@ on:
   push:
     branches:
       - main
-    tags:
-     - '*'
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   build:
@@ -15,15 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Generate timestamp for image tag
-        id: build-timestamp
+      - name: Test GITHUB_SHA
         shell: bash
         run: |
-          TIMESTAMP=$(date --utc +%F.%H%M%S)
-          echo "::set-output name=TIMESTAMP::${TIMESTAMP}"
-        
-      - name: Build
-        run: |
-          echo 'Build!'
-          echo "::notice:: ${{ steps.build-timestamp.outputs.TIMESTAMP }}"
+          echo $GITHUB_SHA
+
 
